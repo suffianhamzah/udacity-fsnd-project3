@@ -57,6 +57,7 @@ def get_log_error():
     cursor = db.cursor()
     cursor.execute("select date, percentage::numeric(2,1) "
                    "from requesterrorpercentage where percentage > 1;")
+    select * from (select time::date as date, sum(case when status != '200 OK' then 1 else 0 end)/ sum(case when status = '200 OK' then 1 else 0 end)::float * 100 as percentage from log group by date) as test  where percentage > 1;
     return cursor.fetchall()
     db.close()
 

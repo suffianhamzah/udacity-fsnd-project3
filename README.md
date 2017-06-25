@@ -22,7 +22,14 @@ This project uses a python module called 'pyscopg2'. You will need to install it
 pip install psycopg2
 ```
 
-#### Create database from schema sql
+#### Getting the data for the database:
+Please download the data from this [link](https://d17h27t6h515a5.cloudfront.net/topher/2016/August/57b5f748_newsdata/newsdata.zip). It is a .zip file containing the sql file with schemas and the data itself.
+
+#### Create database from the .sql file
+Once you have downloaded the data, you can load your data into your database.
+Run the command ```psql -d news -f newsdata.sql.```, where:
+* ```psql``` - the PostgreSQL command line tool
+* ```-d news``` = connect the database named news
 
 #### Create views used for SQL queries
 This project uses a custom view called ```requesterrorpercentage```. You will need to use ```psql```,
