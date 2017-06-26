@@ -1,4 +1,4 @@
-# Todo: Write 3 queries
+#! /usr/bin/env python3
 
 import psycopg2
 
@@ -22,8 +22,11 @@ class dB(object):
 
     def __init__(self, DBNAME):
         """Initializes the DB connection"""
-        self.db = psycopg2.connect(database=DBNAME)
-        self.cursor = self.db.cursor()
+        try:
+            self.db = psycopg2.connect(database=DBNAME)
+            self.cursor = self.db.cursor()
+        except Exception as e:
+            print(e)
 
     def get_query(self, sql_statement):
         """Executes SELECT query and returns results.
