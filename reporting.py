@@ -68,57 +68,6 @@ def print_report(results, header, value_name):
     print("\n")
 
 
-def get_most_popular_articles():
-    db = psycopg2.connect(database=DBNAME)
-    cursor = db.cursor()
-    cursor.execute("select articles.title,count(*) as views "
-                   "from articles "
-                   "join log "
-                   "on '/article/' || articles.slug = log.path "
-                   "group by articles.title "
-                   "order by views desc limit 3;")
-    return cursor.fetchall()
-    db.close()
-
-
-def get_author_views_all_time():
-    db = psycopg2.connect(database=DBNAME)
-    cursor = db.cursor()
-    cursor.execute("select authors.name, count(*) as views "
-                   "from authors, articles, log "
-                   "where authors.id = articles.author "
-                   "and '/article/' || articles.slug = log.path "
-                   "group by authors.name "
-                   "order by views desc;")
-    return cursor.fetchall()
-    db.close()
-
-
-def get_log_error():
-    """
-    gets the percentage -> created two views
-    create view requestsuccess as
-        select date_trunc('day',time) as date,
-        count(*) as num
-        from log
-        where status = '200 OK'
-        group by date
-        order by num;
-    """
-    db = psycopg2.connect(database=DBNAME)
-    cursor = db.cursor()
-    cursor.execute(
-        "select date, percentage::numeric(2,1) "
-        "from (select time::date as date, "
-        "sum(case when status != '200 OK' then 1 else 0 end) / "
-        "sum(case when status = '200 OK' then 1 else 0 end)::float * "
-        "100 as percentage "
-        "from log group by date) as requesterrorpercentage "
-        "where percentage::numeric(2,1) > 1;")
-    return cursor.fetchall()
-    db.close()
-
-
 def main():
     # Initializes a DB object
     my_DB = dB(DBNAME)
@@ -140,6 +89,11 @@ def main():
         "group by authors.name "
         "order by views desc;")
 
+    """
+    Got some help from https://stackoverflow.com/questions/12359054/
+    sql-group-by-generate-multiple-aggregate-columns-from-single-column
+    for this query
+    """
     logs = my_DB.get_query(
         "select date, percentage::numeric(2,1) "
         "from (select time::date as date, "

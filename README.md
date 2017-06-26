@@ -10,7 +10,7 @@ First, either clone or download the project code from this repo:
 
 #### Cloning using SSH or HTTPS
 ```
-$ git clone <https>
+$ git clone git@github.com:suffianhamzah/udacity-fsnd-project3.git
 ```
 
 #### Install PostgreSQL
@@ -30,23 +30,7 @@ Once you have downloaded the data, you can load your data into your database.
 Run the command ```psql -d news -f newsdata.sql.```, where:
 * ```psql``` - the PostgreSQL command line tool
 * ```-d news``` = connect the database named news
-
-#### Create views used for SQL queries
-This project uses a custom view called ```requesterrorpercentage```. You will need to use ```psql```,
-and then create the view using the SQL statement below:
-```SQL
-CREATE VIEW requesterrorpercentage AS
-SELECT time::date AS date,
-    (
-        SUM(CASE WHEN status != '200 OK' THEN 1 ELSE 0 END) /
-        SUM(CASE when status = '200 OK' THEN 1 ELSE 0 END)::FLOAT *
-        100
-    ) AS percentage
-FROM log
-GROUP BY date;
-```
-This view was made with reference to this [stackoverflow Q & A](https://stackoverflow.com/questions/12359054/sql-group-by-generate-multiple-aggregate-columns-from-single-column)
-
+* ```-f newsdata.sql``` = source of schema and data population for the news database
 # Usage
 
 To run this project, type: ```python reporting.py```
